@@ -10,7 +10,7 @@ const toHTML = fruit => `
           <img src="${fruit.img}" height="240px" class="card-img-top" alt="${fruit.title}">
           <div class="card-body">
             <h5 class="card-title">${fruit.title}</h5>
-            <a href="#" class="btn btn-primary">Посмотреть цену</a>
+            <a href="#" class="btn btn-primary" data-btn="price" data-id="${fruit.id}">Посмотреть цену</a>
             <a href="#" class="btn btn-danger">Удалить</a>
           </div>
         </div>
@@ -40,4 +40,29 @@ const modal = $.modal({
             modal.close()
         }}
     ]
+})
+
+const priceModal = $.modal({
+    title: 'Цена на Товар',
+    closable: true,
+    width: '400px',
+    footerButtons: [
+        {text: 'Закрыть', type: 'primary', handler() {
+            priceModal.close()
+        }}
+    ]
+})
+
+document.addEventListener('click', event => {
+    event.preventDefault()
+    const btnType = event.target.dataset.btn
+    const id = +event.target.dataset.id
+
+    if (btnType === 'price') {
+        const fruit = fruits.find(f => f.id === id)
+        priceModal.setContent(`
+            <p>Цена на ${fruit.title}: <strong>${fruit.price}$</strong></p>
+        `)
+        priceModal.open()
+    }
 })
